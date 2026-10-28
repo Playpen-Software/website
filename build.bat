@@ -1,0 +1,1 @@
+bun build ./modules/index.ts --outfile ./modules/dist/index.js --target browser --bundle

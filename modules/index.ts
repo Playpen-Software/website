@@ -1,0 +1,95 @@
+import * as settings from './settings';
+import * as tabs from './tabs';
+import * as spaceFillers from './spaceFillers';
+import { initTooltips } from './tooltips';
+
+import { populateSVGs } from "./fileLoader";
+
+let isFinishing = false;
+let initialization: Promise<void> | null = null;
+
+export function init(): Promise<void> {
+    if (!initialization) {
+        initialization = initialize().catch(error => {
+            initialization = null;
+            throw error;
+        });
+    }
+    return initialization;
+}
+
+async function initialize() {
+    console.log("Initializing Website");
+    initTooltips();
+    
+    // Load User Preferences
+    try {
+        await settings.init();
+    } catch {}
+    
+    // Replace SVG Placeholders with SVGs
+    try {
+        await populateSVGs();
+    } catch {
+        try {
+            await populateSVGs();
+        } catch {}
+    }
+    
+    // Attempt to bind tab-navigation fix.
+    try {
+        document.addEventListener('keydown', (event: KeyboardEvent): void => {
+            if (event.key !== 'Tab') return;
+            
+            const selector = 'a[href], button, input, textarea, select, [tabindex]:not([tabindex="-1"])';
+            const focusables = Array.from(
+                document.querySelectorAll<HTMLElement>(selector)
+            ).filter((el: HTMLElement) => {
+                const isVisible = el.offsetWidth > 0 && el.offsetHeight > 0;
+                const isNotDisabled = !el.hasAttribute('disabled');
+                return isVisible && isNotDisabled;
+            });
+            
+            if (focusables.length === 0) return;
+            
+            const firstEl = focusables[0];
+            const lastEl = focusables[focusables.length - 1];
+            const activeElement = document.activeElement as HTMLElement | null;
+            
+            if (lastEl && event.shiftKey && activeElement === firstEl) {
+                lastEl.focus();
+                event.preventDefault();
+            } else if (firstEl && !event.shiftKey && activeElement === lastEl) {
+                firstEl.focus();
+                event.preventDefault();
+            }
+        });
+    } catch {}
+    
+    // Initialize space filler shapes
+    try {
+        spaceFillers.init();
+    } catch {}
+
+    setTimeout(finishLoading, 750);
+}
+
+async function finishLoading() {
+    if (isFinishing) return;
+    isFinishing = true;
+
+    tabs.goto('main', { logPrevious: false, removePrevious: true })
+}
+
+function checkLoadState() {
+    if (document.readyState === 'complete') {
+        void init();
+    } else {
+        window.addEventListener('load', () => void init(), { once: true });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("Website has finished loading DOM content");
+    checkLoadState();
+});

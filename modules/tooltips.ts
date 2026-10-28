@@ -1,4 +1,3 @@
-(function() {
 const triggerSelector = [
     '.tooltip-button',
     '.tooltip-support-button',
@@ -6,21 +5,25 @@ const triggerSelector = [
     '.tooltip-delayed-support-button',
     '.tooltip-support-delayed-button',
 ].join(', ');
+
 const viewportPadding = 10;
 const tooltipGap = 8;
 const delayedTooltipWait = 750;
-let tooltip = null;
-let activeTrigger = null;
-let touchFocusedTrigger = null;
-let showTimer;
-function initTooltips() {
-    if (tooltip)
-        return;
+
+let tooltip: HTMLDivElement | null = null;
+let activeTrigger: HTMLElement | null = null;
+let touchFocusedTrigger: HTMLElement | null = null;
+let showTimer: ReturnType<typeof setTimeout> | undefined;
+
+export function initTooltips(): void {
+    if (tooltip) return;
+
     tooltip = document.createElement('div');
     tooltip.className = 'tooltip-popup';
-    tooltip.id = 'nivix-tooltip-popup';
+    tooltip.id = 'playpen-tooltip-popup';
     tooltip.setAttribute('role', 'tooltip');
     document.body.append(tooltip);
+
     document.addEventListener('pointerover', handlePointerOver);
     document.addEventListener('pointerout', handlePointerOut);
     document.addEventListener('pointerdown', handlePointerDown);
@@ -29,23 +32,58 @@ function initTooltips() {
     document.addEventListener('scroll', repositionTooltip, true);
     window.addEventListener('resize', repositionTooltip);
 }
-function findTrigger(target) {
-    if (!(target instanceof Element))
-        return null;
-    return target.closest(triggerSelector);
+
+function findTrigger(target: EventTarget | null): HTMLElement | null {
+    if (!(target instanceof Element)) return null;
+    return target.closest<HTMLElement>(triggerSelector);
 }
-function getTooltipContent(trigger) {
+
+function getTooltipContent(trigger: HTMLElement): string {
     const content = trigger.getAttribute('data-tooltip-content')?.trim();
-    if (content)
-        return content;
-    return trigger.querySelector('.tooltip')?.textContent?.trim() ?? '';
+    if (content) return content;
+    return trigger.querySelector<HTMLElement>('.tooltip')?.textContent?.trim() ?? '';
 }
-function handlePointerOver(event) {
-    if (event.pointerType === 'touch')
-        return;
+
+function handlePointerOver(event: PointerEvent): void {
+    if (event.pointerType === 'touch') return;
     const trigger = findTrigger(event.target);
-    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget)))
+    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget))) return;
+
+    activateTooltip(trigger);
+}
+
+function handlePointerOut(event: PointerEvent): void {
+    if (event.pointerType === 'touch') return;
+    const trigger = findTrigger(event.target);
+    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget))) return;
+    if (trigger === activeTrigger && !trigger.matches(':focus-within')) hideTooltip();
+}
+
+function handlePointerDown(event: PointerEvent): void {
+    if (event.pointerType === 'touch') {
+        const trigger = findTrigger(event.target);
+        touchFocusedTrigger = trigger;
+        if (trigger) activateTooltip(trigger);
+        else hideTooltip();
         return;
+    }
+    touchFocusedTrigger = null;
+}
+
+function handleFocusIn(event: FocusEvent): void {
+    const trigger = findTrigger(event.target);
+    if (trigger && trigger !== touchFocusedTrigger) showTooltip(trigger);
+}
+
+function handleFocusOut(event: FocusEvent): void {
+    const trigger = findTrigger(event.target);
+    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget))) return;
+    const wasTouchFocused = trigger === touchFocusedTrigger;
+    if (wasTouchFocused) touchFocusedTrigger = null;
+    if (trigger === activeTrigger && (wasTouchFocused || !trigger.matches(':hover'))) hideTooltip();
+}
+
+function activateTooltip(trigger: HTMLElement): void {
     clearTimeout(showTimer);
     if (trigger.classList.contains('tooltip-delayed-button') ||
         trigger.classList.contains('tooltip-delayed-support-button') ||
@@ -53,89 +91,61 @@ function handlePointerOver(event) {
         hideTooltip();
         activeTrigger = trigger;
         showTimer = setTimeout(() => showTooltip(trigger), delayedTooltipWait);
-    }
-    else {
+    } else {
         showTooltip(trigger);
     }
 }
-function handlePointerOut(event) {
-    const trigger = findTrigger(event.target);
-    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget)))
-        return;
-    if (trigger === activeTrigger && !trigger.matches(':focus-within'))
-        hideTooltip();
-}
-function handlePointerDown(event) {
-    if (event.pointerType === 'touch') {
-        touchFocusedTrigger = findTrigger(event.target);
-        hideTooltip();
-        return;
-    }
-    touchFocusedTrigger = null;
-}
-function handleFocusIn(event) {
-    const trigger = findTrigger(event.target);
-    if (trigger && trigger !== touchFocusedTrigger)
-        showTooltip(trigger);
-}
-function handleFocusOut(event) {
-    const trigger = findTrigger(event.target);
-    if (!trigger || (event.relatedTarget instanceof Node && trigger.contains(event.relatedTarget)))
-        return;
-    if (trigger === touchFocusedTrigger)
-        touchFocusedTrigger = null;
-    if (trigger === activeTrigger && !trigger.matches(':hover'))
-        hideTooltip();
-}
-function showTooltip(trigger) {
-    if (!tooltip)
-        return;
+
+function showTooltip(trigger: HTMLElement): void {
+    if (!tooltip) return;
     clearTimeout(showTimer);
-    if (activeTrigger && activeTrigger !== trigger)
-        removeDescription(activeTrigger);
+
+    if (activeTrigger && activeTrigger !== trigger) removeDescription(activeTrigger);
     activeTrigger = trigger;
+
     const content = getTooltipContent(trigger);
     if (!content) {
         hideTooltip();
         return;
     }
-    tooltip.textContent = content;
+
+    tooltip.innerHTML = content;
     tooltip.classList.toggle('primary', trigger.querySelector('.tooltip.primary') !== null);
     addDescription(trigger);
     repositionTooltip();
     tooltip.classList.add('is-visible');
 }
-function hideTooltip() {
+
+function hideTooltip(): void {
     clearTimeout(showTimer);
-    if (activeTrigger)
-        removeDescription(activeTrigger);
+    if (activeTrigger) removeDescription(activeTrigger);
     activeTrigger = null;
     tooltip?.classList.remove('is-visible');
 }
-function removeDescription(trigger) {
+
+function removeDescription(trigger: HTMLElement): void {
     const descriptions = (trigger.getAttribute('aria-describedby') ?? '')
         .split(/\s+/)
         .filter(id => id && id !== tooltip?.id);
-    if (descriptions.length)
-        trigger.setAttribute('aria-describedby', descriptions.join(' '));
-    else
-        trigger.removeAttribute('aria-describedby');
+    if (descriptions.length) trigger.setAttribute('aria-describedby', descriptions.join(' '));
+    else trigger.removeAttribute('aria-describedby');
 }
-function repositionTooltip() {
-    if (!tooltip || !activeTrigger || !tooltip.textContent)
-        return;
+
+function repositionTooltip(): void {
+    if (!tooltip || !activeTrigger || !tooltip.textContent) return;
+
     const triggerRect = activeTrigger.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
     const preferredSide = activeTrigger.classList.contains('tip-top') ? 'top'
         : activeTrigger.classList.contains('tip-left') ? 'left'
-            : activeTrigger.classList.contains('tip-right') ? 'right'
-                : 'bottom';
+        : activeTrigger.classList.contains('tip-right') ? 'right'
+        : 'bottom';
     const sides = [preferredSide, ...['top', 'right', 'bottom', 'left'].filter(side => side !== preferredSide)];
-    function positionFor(side) {
+
+    function positionFor(side: string): { x: number; y: number; fits: boolean } {
         let x = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
         let y = triggerRect.bottom + tooltipGap;
-        if (side === 'top')
-            y = triggerRect.top - tooltipRect.height - tooltipGap;
+        if (side === 'top') y = triggerRect.top - tooltipRect.height - tooltipGap;
         if (side === 'left') {
             x = triggerRect.left - tooltipRect.width - tooltipGap;
             y = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
@@ -144,26 +154,24 @@ function repositionTooltip() {
             x = triggerRect.right + tooltipGap;
             y = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
         }
+
         const fits = x >= viewportPadding && y >= viewportPadding &&
             x + tooltipRect.width <= window.innerWidth - viewportPadding &&
             y + tooltipRect.height <= window.innerHeight - viewportPadding;
         return { x, y, fits };
     }
+
     const position = sides.map(positionFor).find(candidate => candidate.fits) ?? positionFor(preferredSide);
     const maxX = Math.max(viewportPadding, window.innerWidth - tooltipRect.width - viewportPadding);
     const maxY = Math.max(viewportPadding, window.innerHeight - tooltipRect.height - viewportPadding);
     tooltip.style.left = `${Math.max(viewportPadding, Math.min(position.x, maxX))}px`;
     tooltip.style.top = `${Math.max(viewportPadding, Math.min(position.y, maxY))}px`;
 }
-function addDescription(trigger) {
+
+function addDescription(trigger: HTMLElement): void {
     const descriptions = (trigger.getAttribute('aria-describedby') ?? '')
         .split(/\s+/)
         .filter(Boolean);
-    if (!descriptions.includes(tooltip.id))
-        descriptions.push(tooltip.id);
+    if (!descriptions.includes(tooltip!.id)) descriptions.push(tooltip!.id);
     trigger.setAttribute('aria-describedby', descriptions.join(' '));
 }
-
-window.Nivix = window.Nivix || {};
-window.Nivix.tooltips = { initTooltips };
-})();

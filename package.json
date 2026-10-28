@@ -1,0 +1,24 @@
+{
+  "name": "playpen-software-website",
+  "version": "1.0.0",
+  "description": "The official website for playpen software",
+  "homepage": "https://github.com/Playpen-Technologies/website#readme",
+  "bugs": {
+    "url": "https://github.com/Playpen-Technologies/website/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Playpen-Technologies/website.git"
+  },
+  "license": "Apache-2.0",
+  "author": "Christian \"Milo\" Bone <bone.christian.c@outlook.com>",
+  "type": "module",
+  "main": "modules/index.ts",
+  "scripts": {
+    "dev": "node test.js"
+  },
+  "devDependencies": {
+    "express": "^5.3.0",
+    "typescript": "^7.0.2"
+  }
+}

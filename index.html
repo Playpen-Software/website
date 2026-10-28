@@ -3,102 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Nivix Technology builds smart, affordable software solutions. Where form meets function and affordability.">
-    <meta name="theme-color" content="#f6f6f6">
-    <title>Nivix Technology</title>
+    <meta name="description" content="Developing the next generation of software where form meets function and affordability.">
+    <title>Playpen Software</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="sheets/nxvid.css">
+    <link rel="stylesheet" href="sheets/playpen.css">
     <link rel="stylesheet" href="sheets/index.css">
-    <link rel="stylesheet" href="sheets/site.css">
+    <link rel="stylesheet" href="sheets/spaceFillers.css">
+    <link rel="stylesheet" href="sheets/notifications.css">
+    <link rel="stylesheet" href="sheets/tabs.css">
+    <link rel="stylesheet" href="sheets/tooltips.css">
 </head>
 <body>
-    <header class="site-header">
-        <a class="site-brand" href="#home" aria-label="Nivix Technology home">
-            <img src="assets/favicon.png" alt="">
-            <span>Nivix <strong>Technology</strong></span>
-        </a>
-        <nav class="site-nav" aria-label="Main navigation">
-            <a href="#products">Products</a>
-            <a href="#team">Team</a>
-            <a href="studio/">Studio</a>
-        </nav>
-    </header>
-
-    <main class="home-main">
-        <section class="home-hero" id="home">
-            <div class="hero-copy">
-                <p class="eyebrow"><span class="hero-spark" aria-hidden="true">✳</span> Independent software · Nivix Technology</p>
-                <h1>Where form meets <span>function</span> and affordability.</h1>
-                <p>Building smart, affordable software solutions that empower businesses, students, and creators to thrive.</p>
-                <a class="nivix-primary-button primary" href="studio/">Explore Nivix Studio <span aria-hidden="true">→</span></a>
+    <div id="space-filler-container"></div>
+    <div class="tab previsible-flex center" id="load">
+        <h1 class="playpen-accent">Playpen Software</h1>
+        <div class="playpen-loader"></div>
+    </div>
+    <div class="tab main-container" id="main" data-tab-display="flex">
+        <div class="playpen-horizontal-navigation website-navigation">
+            <h2 class="playpen-accent" aria-label="Playpen Software">Playpen</h2>
+            <div class="filler"></div>
+            <button class="playpen-primary-button icon-button"
+            data-active-hightlight="true"
+            data-tab-navigaton="home"><svgPlaceholder>assets/svg/home.svg</svgPlaceholder></button>
+        </div>
+        <div class="tab-container">
+            <div class="tab center previsible-flex" id="main_home" data-tab-display="flex">
+                <h1 class="playpen-accent">This website is under construction</h1>
+                <p>We will be available soon &lt;3</p>
             </div>
-            <div class="hero-art" aria-hidden="true">
-                <div class="art-tile tile-one"><img src="assets/img/apps/studio-favicon.png" alt=""></div>
-                <div class="art-tile tile-two"><img src="assets/img/apps/store-favicon.png" alt=""></div>
-                <div class="art-tile tile-three"><img src="assets/favicon.png" alt=""></div>
-                <i class="art-line"></i>
-            </div>
-            <div class="hero-index"><span>01</span><span>Thoughtful tools for everyday work</span><span>⌄</span></div>
-        </section>
-
-        <section class="home-section product-section" id="products">
-            <div class="home-section-heading">
-                <div><p class="eyebrow">Made to be useful</p><h2>Good tools should feel right.</h2></div>
-                <p>Nivix creates intuitive software for the people and small teams often overlooked by one-size-fits-all tools.</p>
-            </div>
-            <a class="studio-feature" href="studio/">
-                <div class="feature-icon"><img src="assets/favicon.png" alt=""></div>
-                <div class="feature-copy">
-                    <p class="eyebrow">Product collection</p>
-                    <h3>Nivix Studio</h3>
-                    <p>Specialized productivity apps for practical, real-world work. Explore available releases and the Studio archive.</p>
-                </div>
-                <span class="feature-arrow" aria-hidden="true">↗</span>
-            </a>
-        </section>
-
-        <section class="home-section team-section" id="team">
-            <div class="home-section-heading">
-                <div><p class="eyebrow">The people behind Nivix</p><h2>Small team. Big care.</h2></div>
-                <p>Meet the people building Nivix Technology.</p>
-            </div>
-            <div class="team-grid">
-                <article class="person-card">
-                    <div class="person-initials" aria-hidden="true">WJ</div>
-                    <div class="person-copy">
-                        <p class="eyebrow">Founder &amp; CEO</p>
-                        <h3>Westin J.</h3>
-                        <p>Guiding Nivix’s mission to make software accessible and user-friendly.</p>
-                    </div>
-                </article>
-                <article class="person-card">
-                    <img class="person-photo" src="assets/img/staff/Christian Bone.png" alt="Christian Bone">
-                    <div class="person-copy">
-                        <p class="eyebrow">Co-Founder &amp; Head of Development</p>
-                        <h3>Christian Bone</h3>
-                        <p>Building the software architecture and features behind Nivix products.</p>
-                        <div class="person-links">
-                            <a href="https://github.com/SqueakyLlama1" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-                            <a href="mailto:bone.christian.c@outlook.com">Email <span aria-hidden="true">↗</span></a>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <section class="home-cta">
-            <div><p class="eyebrow">Discover the collection</p><h2>Find your next useful tool.</h2></div>
-            <a class="nivix-primary-button" href="studio/">Visit Nivix Studio <span aria-hidden="true">→</span></a>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <a class="footer-brand" href="#home"><img src="assets/favicon.png" alt=""> Nivix Technology</a>
-        <span>© <span id="copyright-year">2026</span> Nivix Technology. All rights reserved.</span>
-        <a href="https://github.com/Nivix-Technology/studio" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
-    </footer>
-    <script>
-        document.getElementById('copyright-year').textContent = String(new Date().getFullYear());
-    </script>
+        </div>
+    </div>
+    <script src="modules/dist/index.js" type="module"></script>
 </body>
 </html>

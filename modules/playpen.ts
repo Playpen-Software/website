@@ -1,52 +1,3 @@
-interface CheckboxDependency {
-    source: HTMLInputElement;
-    expectedValue: 'checked' | 'unchecked';
-}
-
-interface CheckboxDependencyListener extends CheckboxDependency {
-    handler: () => void;
-}
-
-const dependencyListeners = new WeakMap<HTMLInputElement, CheckboxDependencyListener>();
-
-function getCheckboxDependency(dependentCheckbox: HTMLInputElement): CheckboxDependency | null {
-    const dependency = dependentCheckbox.dataset['depends'] ?? '';
-    const separatorIndex = dependency.indexOf(':');
-    if (separatorIndex < 1) {
-        console.error(`Invalid checkbox data-depends value: "${dependency}". Expected "id:checked" or "id:unchecked".`);
-        return null;
-    }
-
-    const dependencyId = dependency.slice(0, separatorIndex).trim();
-    const expectedValue = dependency.slice(separatorIndex + 1).trim();
-    if (!dependencyId || (expectedValue !== 'checked' && expectedValue !== 'unchecked')) {
-        console.error(`Invalid checkbox data-depends value: "${dependency}". Expected "id:checked" or "id:unchecked".`);
-        return null;
-    }
-
-    const source = document.getElementById(dependencyId);
-    if (!(source instanceof HTMLInputElement) || source.type !== 'checkbox') {
-        console.error(`Checkbox dependency "${dependencyId}" does not reference a checkbox element.`);
-        return null;
-    }
-
-    return { source, expectedValue };
-}
-
-function initInputButtonLink() {
-    const buttons = document.querySelectorAll<HTMLButtonElement>('button[data-input-link]');
-    
-    buttons.forEach(function(button) {
-        const linkedElID = button.getAttribute('data-input-link') || "";
-
-        const linkedEl = document.getElementById(linkedElID);
-        
-        button.addEventListener('click', function() {
-            linkedEl?.click();
-        });
-    });
-}
-
 export function init(): void {
     const dependentCheckboxes = document.querySelectorAll<HTMLInputElement>(
         'input[type="checkbox"][data-depends]'
@@ -91,6 +42,73 @@ export function init(): void {
 
     initInputButtonLink();
     PopupPlacer.init();
+    initHorizontalNavigationOverflow();
+}
+
+const dependencyListeners = new WeakMap<HTMLInputElement, CheckboxDependencyListener>();
+
+function initHorizontalNavigationOverflow(): void {
+    const checkOverflow = () => {
+        const navElements = document.querySelectorAll<HTMLElement>('.playpen-horizontal-navigation');
+
+        navElements.forEach((el) => {
+            const isOverflowing = el.scrollWidth > el.clientWidth;
+            el.classList.toggle('handle-overflow', isOverflowing);
+        });
+    };
+
+    // Check on initial load
+    checkOverflow();
+
+    // Check whenever the window is resized
+    window.addEventListener('resize', checkOverflow);
+}
+
+function initInputButtonLink() {
+    const buttons = document.querySelectorAll<HTMLButtonElement>('button[data-input-link]');
+
+    buttons.forEach(function(button) {
+        const linkedElID = button.getAttribute('data-input-link') || "";
+
+        const linkedEl = document.getElementById(linkedElID);
+
+        button.addEventListener('click', function() {
+            linkedEl?.click();
+        });
+    });
+}
+
+function getCheckboxDependency(dependentCheckbox: HTMLInputElement): CheckboxDependency | null {
+    const dependency = dependentCheckbox.dataset['depends'] ?? '';
+    const separatorIndex = dependency.indexOf(':');
+    if (separatorIndex < 1) {
+        console.error(`Invalid checkbox data-depends value: "${dependency}". Expected "id:checked" or "id:unchecked".`);
+        return null;
+    }
+
+    const dependencyId = dependency.slice(0, separatorIndex).trim();
+    const expectedValue = dependency.slice(separatorIndex + 1).trim();
+    if (!dependencyId || (expectedValue !== 'checked' && expectedValue !== 'unchecked')) {
+        console.error(`Invalid checkbox data-depends value: "${dependency}". Expected "id:checked" or "id:unchecked".`);
+        return null;
+    }
+
+    const source = document.getElementById(dependencyId);
+    if (!(source instanceof HTMLInputElement) || source.type !== 'checkbox') {
+        console.error(`Checkbox dependency "${dependencyId}" does not reference a checkbox element.`);
+        return null;
+    }
+
+    return { source, expectedValue };
+}
+
+interface CheckboxDependency {
+    source: HTMLInputElement;
+    expectedValue: 'checked' | 'unchecked';
+}
+
+interface CheckboxDependencyListener extends CheckboxDependency {
+    handler: () => void;
 }
 
 export class ColorPicker {
@@ -100,7 +118,7 @@ export class ColorPicker {
     public hueSlider: HTMLInputElement;
     public inputElement: HTMLInputElement;
     public hexLabel: HTMLLabelElement;
-    
+
     private svCtx: CanvasRenderingContext2D | null;
     private currentHex: string;
     private currentH: number;

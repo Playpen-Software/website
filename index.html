@@ -3,15 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Developing the next generation of software where form meets function and affordability.">
+    <meta name="description" content="Building the next generation of software, where form meets function and affordability.">
     <title>Playpen Software</title>
     <link rel="icon" type="image/png" href="assets/favicon.png">
-    <link rel="stylesheet" href="sheets/playpen.css">
-    <link rel="stylesheet" href="sheets/index.css">
-    <link rel="stylesheet" href="sheets/spaceFillers.css">
-    <link rel="stylesheet" href="sheets/notifications.css">
-    <link rel="stylesheet" href="sheets/tabs.css">
-    <link rel="stylesheet" href="sheets/tooltips.css">
+    <link rel="stylesheet" type="text/css" href="../dist/index.css">
 </head>
 <body>
     <div id="space-filler-container"></div>
@@ -21,19 +16,99 @@
     </div>
     <div class="tab main-container" id="main" data-tab-display="flex">
         <div class="playpen-horizontal-navigation website-navigation">
-            <h2 class="playpen-accent" aria-label="Playpen Software">Playpen</h2>
+            <h1 class="playpen-accent page-label" aria-label="Playpen Software">Playpen</h1>
             <div class="filler"></div>
-            <button class="playpen-primary-button icon-button"
-            data-active-hightlight="true"
-            data-tab-navigaton="home"><svgPlaceholder>assets/svg/home.svg</svgPlaceholder></button>
+            <div class="navigation-buttons">
+                <button class="playpen-primary-button"
+                data-active-tab-highlight="true"
+                data-tab-navigation="main_home"><svgPlaceholder>assets/svg/home.svg</svgPlaceholder>Home</button>
+                <a class="playpen-primary-button" href="studio/index.html"><svgPlaceholder>assets/svg/products/studio.svg</svgPlaceholder>Studio</a>
+                <a class="playpen-primary-button" href="devtools/index.html"><svgPlaceholder>assets/svg/devtools.svg</svgPlaceholder>Dev Tools</a>
+            </div>
         </div>
         <div class="tab-container">
-            <div class="tab center previsible-flex" id="main_home" data-tab-display="flex">
-                <h1 class="playpen-accent">This website is under construction</h1>
-                <p>We will be available soon &lt;3</p>
+            <div class="tab" id="main_home" data-tab-display="flex">
+                <h3>Building the next generation of software, where form meets function and affordability.</h3>
+                <h3 class="playpen-bookmark left-radius right-radius" id="promises">Our Promises</h3>
+
+                <ul class="playpen-unordered-list">
+                    <li class="header">Always Opt-In</li>
+                    <li class="indent">
+                        <ul>
+                            <li>Data collection will always be opt-in, transparent, and plain-spoken.</li>
+                            <li>We collect data strictly for statistics and will never sell your information.</li>
+                            <li class="last-item">All details are fully stated in our <a href="legal/index.html?tab-navigation=privacyPolicy">Privacy Policy</a>.</li>
+                        </ul>
+                    </li>
+
+                    <li class="header">No Planned Obsolescence</li>
+                    <li class="indent">
+                        <ul>
+                            <li>We will never intentionally slow down, restrict, or design our software to become obsolete to force an upgrade.</li>
+                            <li class="last-item">We only retire older apps or versions when maintaining security and compatibility is no longer practical.</li>
+                        </ul>
+                    </li>
+
+                    <li class="header">Where Form Meets Function</li>
+                    <li class="indent">
+                        <ul>
+                            <li class="last-item">Our software is built for accessibility and versatility—simple enough for immediate home use with zero setup, yet powerful enough for professional environments.</li>
+                        </ul>
+                    </li>
+                </ul>
+                <span class="playpen-disclaimer">*These promises only apply to our own products, not commissioned software</span>
+
+                <h3 class="playpen-bookmark left-radius right-radius" id="team">Team</h3>
+
+                <div class="team-container">
+                    <div class="playpen-image-content-card">
+                        <div class="primary-container">
+                            <div class="header-container">
+                                <img src="assets/img/staff/Westin Jones.jpeg"
+                                alt="Westin Jones Portrait"
+                                aria-label="Westin Jones Portrait">
+                                <div class="details-container">
+                                    <span class="title">Westin Jones</span>
+                                    <hr>
+                                    <span class="job-title">Owner &bull; 2025</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="playpen-image-content-card">
+                        <div class="primary-container">
+                            <div class="header-container">
+                                <img src="assets/img/staff/Christian Bone.jpg"
+                                alt="Christian Bone Portrait"
+                                aria-label="Christian Bone Portrait">
+                                <div class="details-container">
+                                    <span class="title">Christian Bone</span>
+                                    <hr>
+                                    <span class="job-title">Owner &bull; 2025</span>
+                                </div>
+                            </div>
+                            <div class="link-container">
+                                <a class="playpen-primary-button icon-button tooltip-support-button tip-top"
+                                data-tooltip-content="GitHub Profile"
+                                href="https://github.com/SqueakyLlama1"
+                                target="_blank">
+                                <svgPlaceholder>assets/svg/external/GitHub_Invertocat_Black.svg</svgPlaceholder>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3 class="playpen-bookmark left-radius right-radius">Links</h3>
+            <a class="playpen-primary-button" href="https://github.com/Playpen-Software/website" target="_blank"><svgPlaceholder>assets/svg/external/GitHub_Invertocat_Black.svg</svgPlaceholder>Website GitHub Repo</a>
+            <span class="playpen-disclaimer">This website is still under construction, please bear with us. (insert cheesy bear emoji)</span>
+            <h3 class="spacer"></h3>
+            <div class="playpen-footer">
+                <span>&copy; 2026 | Playpen Software</span>
             </div>
         </div>
     </div>
-    <script src="modules/dist/index.js" type="module"></script>
+</div>
+</div>
+<script src="../dist/index.js" type="module"></script>
 </body>
 </html>

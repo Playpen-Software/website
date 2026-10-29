@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Building the next generation of software, where form meets function and affordability.">
+    <title>Playpen Studio</title>
+    <link rel="icon" type="image/png" href="../assets/favicon.png">
+    <link rel="stylesheet" type="text/css" href="../dist/index.css">
+</head>
+<body>
+    <div id="space-filler-container"></div>
+    <div class="tab previsible-flex center" id="load">
+        <h1 class="playpen-accent">Playpen Software</h1>
+        <div class="playpen-loader"></div>
+    </div>
+    <div class="tab main-container" id="main" data-tab-display="flex">
+        <div class="playpen-horizontal-navigation website-navigation">
+            <h1 class="playpen-accent page-label" aria-label="Playpen Studio">Studio</h1>
+            <div class="filler"></div>
+            <div class="navigation-buttons">
+                <button class="playpen-primary-button"
+                data-active-tab-highlight="true"
+                data-tab-navigation="main_home"><svgPlaceholder>../assets/svg/home.svg</svgPlaceholder>Home</button>
+                <a class="playpen-primary-button" href="../index.html"><img src="../assets/favicon.png">Playpen</a>
+            </div>
+        </div>
+        <div class="tab-container">
+            <div class="tab" id="main_home" data-tab-display="flex">
+                <div class="center">
+                    <h1 class="playpen-accent">Studio Installers Coming Soon</h1>
+                </div>
+                <h3 class="spacer"></h3>
+                <div class="playpen-footer">
+                    <span>&copy; 2026 | Playpen Software</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../dist/index.js" type="module"></script>
+</body>
+</html>

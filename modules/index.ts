@@ -2,6 +2,7 @@ import * as settings from './settings';
 import * as tabs from './tabs';
 import * as spaceFillers from './spaceFillers';
 import { initTooltips } from './tooltips';
+import * as playpenLib from './playpen';
 
 import { populateSVGs } from "./fileLoader";
 
@@ -88,15 +89,8 @@ async function finishLoading() {
     if (!tabs.navigateFromURLParams()) tabs.goto('main_home', { logPrevious: false, removePrevious: true });
 }
 
-function checkLoadState() {
-    if (document.readyState === 'complete') {
-        void init();
-    } else {
-        window.addEventListener('load', () => void init(), { once: true });
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     console.log("Website has finished loading DOM content");
-    checkLoadState();
+    await playpenLib.waitForLoad();
+    init();
 });

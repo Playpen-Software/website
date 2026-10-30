@@ -42,26 +42,18 @@ export function init(): void {
 
     initInputButtonLink();
     PopupPlacer.init();
-    initHorizontalNavigationOverflow();
 }
 
 const dependencyListeners = new WeakMap<HTMLInputElement, CheckboxDependencyListener>();
 
-function initHorizontalNavigationOverflow(): void {
-    const checkOverflow = () => {
-        const navElements = document.querySelectorAll<HTMLElement>('.playpen-horizontal-navigation');
-
-        navElements.forEach((el) => {
-            const isOverflowing = el.scrollWidth > el.clientWidth;
-            el.classList.toggle('handle-overflow', isOverflowing);
+export async function waitForLoad(): Promise<void> {
+    if (document.readyState !== 'complete') {
+        await new Promise<void>((resolve) => {
+            window.addEventListener('load', () => resolve(), { once: true });
         });
-    };
+    }
 
-    // Check on initial load
-    checkOverflow();
-
-    // Check whenever the window is resized
-    window.addEventListener('resize', checkOverflow);
+    await document.fonts.ready;
 }
 
 function initInputButtonLink() {
@@ -127,8 +119,8 @@ export class ColorPicker {
 
     constructor(initialValue?: string | number) {
         this.currentHex = typeof initialValue === "string" && /^#[\da-f]{6}$/i.test(initialValue)
-            ? initialValue
-            : "#000000";
+        ? initialValue
+        : "#000000";
 
         const hsv = this.hexToHsv(this.currentHex);
         this.currentH = hsv.h;
@@ -347,8 +339,8 @@ export class PopupPlacer {
         const clampY = (val: number) => Math.max(minY, Math.min(val, maxY));
 
         const aboveTrigger = triggerRect
-            ? { x: triggerX - width / 2, y: triggerRect.top - height - this.popupMargin }
-            : null;
+        ? { x: triggerX - width / 2, y: triggerRect.top - height - this.popupMargin }
+        : null;
 
         const candidates = [
             { x, y },
@@ -360,8 +352,8 @@ export class PopupPlacer {
         ];
 
         const fallbackPos = triggerRect && triggerRect.top > window.innerHeight / 2 && aboveTrigger
-            ? aboveTrigger
-            : { x, y };
+        ? aboveTrigger
+        : { x, y };
 
         const placement = candidates.find(pos => pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY) ?? {
             x: clampX(fallbackPos.x),
